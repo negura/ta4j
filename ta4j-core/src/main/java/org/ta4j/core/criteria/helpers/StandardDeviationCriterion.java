@@ -45,7 +45,7 @@ public class StandardDeviationCriterion extends AbstractAnalysisCriterion {
      */
     private final boolean lessIsBetter;
 
-    private final VarianceCriterion varianceCriterion;
+    private final AbstractVarianceCriterion varianceCriterion;
 
     /**
      * Constructor with {@link #lessIsBetter} = false.
@@ -55,6 +55,19 @@ public class StandardDeviationCriterion extends AbstractAnalysisCriterion {
      */
     public StandardDeviationCriterion(AnalysisCriterion criterion) {
         this.varianceCriterion = new VarianceCriterion(criterion);
+        this.lessIsBetter = false;
+    }
+
+
+    /**
+     * Constructs a StandardDeviationCriterion with a specified analysis criterion and variance criterion.
+     * This constructor sets {@code lessIsBetter} to false by default.
+     *
+     * @param criterion         the analysis criterion from which the standard deviation is calculated
+     * @param varianceCriterion the custom variance criterion used for standard deviation computation
+     */
+    public StandardDeviationCriterion(AnalysisCriterion criterion, AbstractVarianceCriterion varianceCriterion) {
+        this.varianceCriterion = varianceCriterion;
         this.lessIsBetter = false;
     }
 

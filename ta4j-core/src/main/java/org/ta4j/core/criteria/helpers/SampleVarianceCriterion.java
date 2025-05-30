@@ -24,26 +24,39 @@
 package org.ta4j.core.criteria.helpers;
 
 import org.ta4j.core.AnalysisCriterion;
+import org.ta4j.core.num.DecimalNum;
 import org.ta4j.core.num.Num;
 
 /**
- * Variance criterion.
+ * Sample Variance criterion.
  *
  * <p>
- * Calculates the variance for a Criterion.
+ * Calculates the sample variance for a criterion using (n-1) as denominator.
+ * This implementation provides an unbiased estimator of population variance.
  */
-public class VarianceCriterion extends AbstractVarianceCriterion {
+public class SampleVarianceCriterion extends AbstractVarianceCriterion {
 
-    public VarianceCriterion(AnalysisCriterion criterion) {
+    public SampleVarianceCriterion(AnalysisCriterion criterion) {
         super(criterion);
     }
 
-    public VarianceCriterion(AnalysisCriterion criterion, boolean lessIsBetter) {
+    public SampleVarianceCriterion(AnalysisCriterion criterion, boolean lessIsBetter) {
         super(criterion, lessIsBetter);
     }
 
+    /**
+     * Returns the denominator for variance calculation (n-1).
+     *
+     * @param numberOfPositions the number of positions
+     * @return the denominator to be used in variance calculation
+     */
     @Override
     protected Num applyVarianceDenominator(Num variance, Num numberOfPositions) {
-        return variance.dividedBy(numberOfPositions);
+        if (numberOfPositions.isLessThanOrEqual(DecimalNum.valueOf(1))){
+            return DecimalNum.valueOf(0);
+        }
+        return variance.dividedBy(
+            numberOfPositions.minus(DecimalNum.valueOf(1))
+        );
     }
 }
